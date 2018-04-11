@@ -35,8 +35,7 @@ const getState = async (dispatch) => {
  *
  * @returns {Promise<MerlinAction<R>>}
  */
-const _reduxApiAction = async (dispatch, actions) => {
-  const { reducer, fn, start, fail, end, shouldFetchFn, paramName = 'query', params } = actions.fetch();
+const _reduxApiAction = async (dispatch, { reducer, fn, start, fail, end, shouldFetchFn, paramName = 'query', params }) => {
 
   // should we fetch or not? we will send the state to the fn, if not specified, we should fetch.
   const shouldFetch = !shouldFetchFn || shouldFetchFn(await getState(dispatch));
@@ -69,9 +68,8 @@ const _reduxApiAction = async (dispatch, actions) => {
  *
  * @returns {Promise<R>}
  */
-const reduxApiAction = async (params) => {
-  const { dispatch } = params;
-  const data = await _reduxApiAction(params);
+const reduxApiAction = async (dispatch, params) => {
+  const data = await _reduxApiAction(dispatch, params);
   return dispatch(data);
 };
 
