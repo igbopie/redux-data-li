@@ -1,5 +1,5 @@
 {
-  "name": "redux-data",
+  "name": "redux-data-li",
   "version": "0.0.1",
   "description": "Redux Utility to generate actions and reducers ofr API Calls",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/igbopie/redux-data.git"
+    "url": "https://github.com/igbopie/redux-data-li.git"
   },
   "keywords": [
     "javascript",
