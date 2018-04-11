@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Redux Utility to generate actions and reducers ofr API Calls",
   "main": "dist/index.js",
+  "license": "MIT",
   "scripts": {
     "test": "node make test",
     "serve": "node make serve",
