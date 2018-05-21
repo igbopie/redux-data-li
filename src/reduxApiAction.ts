@@ -1,15 +1,29 @@
 import { get } from 'lodash';
 
+export interface IReduxAPIAction {
+  name: string;
+  paramsFn?: (params: any) => any;
+  fn: (params: any) => any;
+  start: (params: any) => any;
+  end: (response: any, originalParams: any) => any;
+  fail: (error: any, originalParams: any) => any;
+  shouldFetchFn?: (state: any) => boolean;
+  reducer?: string;
+  paramName?: string;
+  source?: string;
+  params?: any;
+}
+
 /**
  *
  * @param {Dispatch} dispatch
  */
-const getState = async (dispatch) => {
+const getState = async (dispatch: any) => {
   /**
    * @param {*} dispatch
    * @param {Function} gerState
    */
-  return await dispatch((_, getState) => getState());
+  return await dispatch((_: any, getStateInner: () => any) => getStateInner());
 };
 
 /**
@@ -35,7 +49,8 @@ const getState = async (dispatch) => {
  *
  * @returns {Promise<MerlinAction<R>>}
  */
-const _reduxApiAction = async (dispatch, { reducer, fn, start, fail, end, shouldFetchFn, paramName = 'query', params }) => {
+const reduxApiActionInner = async (dispatch: any, {
+  reducer, fn, start, fail, end, shouldFetchFn, paramName, params }: IReduxAPIAction): Promise<any> => {
 
   // should we fetch or not? we will send the state to the fn, if not specified, we should fetch.
   const shouldFetch = !shouldFetchFn || shouldFetchFn(await getState(dispatch));
@@ -47,7 +62,7 @@ const _reduxApiAction = async (dispatch, { reducer, fn, start, fail, end, should
     await dispatch(requestAction);
 
     // If supplied with a reducer then get the state and extract the parameter and set the params
-    if (reducer) {
+    if (paramName && reducer) {
       const scopedState = get(await getState(dispatch), reducer);
       payload = get(scopedState, paramName) || payload;
     }
@@ -68,8 +83,8 @@ const _reduxApiAction = async (dispatch, { reducer, fn, start, fail, end, should
  *
  * @returns {Promise<R>}
  */
-const reduxApiAction = async (dispatch, params) => {
-  const data = await _reduxApiAction(dispatch, params);
+const reduxApiAction = async (dispatch: any, params: IReduxAPIAction): Promise<any> => {
+  const data = await reduxApiActionInner(dispatch, params);
   return dispatch(data);
 };
 
