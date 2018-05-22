@@ -27,25 +27,12 @@ const getState = async (dispatch: any) => {
 };
 
 /**
- * Standardized way to invoke an API. We will store the query in the state and trigger 2 actions (request and received).
+ * Standardized way to invoke an API. We will store the query in the state and trigger 2 actions
+ * start and end/fail depending on the outcome of the request.
  *
  * @param {Dispatch} dispatch Redux dispatch method
- * @param {{ fetch: (args: any) => {ReduxApiActionParams<P, A, R>} }}
- * {ReduxApiActionParams<P, A, R>}
- * P is the request action (see types/action)
- * A arguments for the api call
- * R is the response of the api call
+ * @param {IReduxAPIAction} reduxAPIAction An object that contains the definition of the action
  *
- * ReduxApiActionParams<P, A, R> {
- *   reducer: string,
- *   fn: (params: A) => Promise<R>,
- *   start: (state: any, payload: any) => any,
- *   end: (state: any, payload: any) => any,
- *   fail: (state: any, payload: any) => any,
- *   paramName?: string,
- *   shouldFetchFn?: (state: any) => boolean,
- *   params: {}
- * }
  *
  * @returns {Promise<MerlinAction<R>>}
  */
@@ -69,6 +56,9 @@ const reduxApiActionInner = async (dispatch: any, {
 
     try {
       const response = await fn(payload);
+      if (response.status && response.status >= 400) {
+        throw response;
+      }
       return await dispatch(end(response, params));
     } catch (e) {
       return await dispatch(fail(e, params));
