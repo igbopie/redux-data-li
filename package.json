@@ -1,8 +1,8 @@
 {
   "name": "redux-data-li",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Redux Utility to generate actions and reducers ofr API Calls",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
