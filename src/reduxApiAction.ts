@@ -74,8 +74,7 @@ const reduxApiActionInner = async (dispatch: any, {
  * @returns {Promise<R>}
  */
 const reduxApiAction = async (dispatch: any, params: IReduxAPIAction): Promise<any> => {
-  const data = await reduxApiActionInner(dispatch, params);
-  return dispatch(data);
+  return reduxApiActionInner(dispatch, params);
 };
 
 export { reduxApiAction, getState };
