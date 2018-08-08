@@ -7,7 +7,7 @@ export interface IActionInfo {
   apiFn: (params: any) => any;
   shouldFetchFn?: (state: any) => boolean;
   reducer?: string;
-  paramName: string;
+  paramName?: string;
   source?: string;
 }
 
@@ -98,10 +98,10 @@ export function generateActions(
   return {
     ActionTypes,
     Actions: {
-      fetch: (args: any): IReduxAPIAction => ({
+      fetch: (args: any = {}): IReduxAPIAction => ({
+        apiFn,
         end: fetchEnd,
         fail: fetchFail,
-        fn: apiFn,
         name,
         paramName,
         params: args,

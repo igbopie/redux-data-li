@@ -1,14 +1,8 @@
-export interface IReduxAPIAction {
-    name: string;
-    paramsFn?: (params: any) => any;
-    fn: (params: any) => any;
+import { IActionInfo } from './actions';
+export interface IReduxAPIAction extends IActionInfo {
     start: (params: any) => any;
     end: (response: any, originalParams: any) => any;
     fail: (error: any, originalParams: any) => any;
-    shouldFetchFn?: (state: any) => boolean;
-    reducer?: string;
-    paramName?: string;
-    source?: string;
     params?: any;
 }
 /**

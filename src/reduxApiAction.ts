@@ -1,16 +1,10 @@
 import { get } from 'lodash';
+import { IActionInfo } from './actions';
 
-export interface IReduxAPIAction {
-  name: string;
-  paramsFn?: (params: any) => any;
-  fn: (params: any) => any;
+export interface IReduxAPIAction extends IActionInfo {
   start: (params: any) => any;
   end: (response: any, originalParams: any) => any;
   fail: (error: any, originalParams: any) => any;
-  shouldFetchFn?: (state: any) => boolean;
-  reducer?: string;
-  paramName?: string;
-  source?: string;
   params?: any;
 }
 
@@ -37,7 +31,7 @@ const getState = async (dispatch: any) => {
  * @returns {Promise<MerlinAction<R>>}
  */
 const reduxApiActionInner = async (dispatch: any, {
-  reducer, fn, start, fail, end, shouldFetchFn, paramName, params }: IReduxAPIAction): Promise<any> => {
+  reducer, apiFn, start, fail, end, shouldFetchFn, paramName, params }: IReduxAPIAction): Promise<any> => {
 
   // should we fetch or not? we will send the state to the fn, if not specified, we should fetch.
   const shouldFetch = !shouldFetchFn || shouldFetchFn(await getState(dispatch));
@@ -55,7 +49,7 @@ const reduxApiActionInner = async (dispatch: any, {
     }
 
     try {
-      const response = await fn(payload);
+      const response = await apiFn(payload);
       if (response.status && response.status >= 400) {
         throw response;
       }

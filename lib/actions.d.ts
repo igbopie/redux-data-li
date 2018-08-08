@@ -5,7 +5,7 @@ export interface IActionInfo {
     apiFn: (params: any) => any;
     shouldFetchFn?: (state: any) => boolean;
     reducer?: string;
-    paramName: string;
+    paramName?: string;
     source?: string;
 }
 export interface IActionTypes {
