@@ -1,6 +1,6 @@
 {
   "name": "redux-data-li",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Redux Utility to generate actions and reducers ofr API Calls",
   "main": "lib/index.js",
   "license": "MIT",

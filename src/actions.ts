@@ -98,7 +98,7 @@ export function generateActions(
   return {
     ActionTypes,
     Actions: {
-      fetch: (args: any = {}): IReduxAPIAction => ({
+      fetch: (args?: any): IReduxAPIAction => ({
         apiFn,
         end: fetchEnd,
         fail: fetchFail,
