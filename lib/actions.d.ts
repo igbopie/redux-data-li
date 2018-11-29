@@ -21,9 +21,11 @@ export interface IGenerateActions {
     ActionTypes: IActionTypes;
 }
 export interface IFetchStartResponse {
-    type: string;
-    payload: (params: any) => void | any;
+    name: string;
     originalParams: any;
+    payload: (params: any) => void | any;
+    transactionId: number;
+    type: string;
 }
 export interface IFetchEndResponse {
     type: string;

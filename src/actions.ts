@@ -27,9 +27,11 @@ export interface IGenerateActions {
 }
 
 export interface IFetchStartResponse {
-  type: string;
-  payload: (params: any) => void | any;
+  name: string;
   originalParams: any;
+  payload: (params: any) => void | any;
+  transactionId: number;
+  type: string;
 }
 
 export interface IFetchEndResponse {
@@ -67,17 +69,23 @@ export function generateActions(
 
   /**
    * Fetch start action
-   * @param {string} testId - test id
+   * @param {Object} params Parameters to be passed to the API function
    */
-  const fetchStart = (params: any): IFetchStartResponse => ({
-    originalParams: params,
-    payload: paramsFn ? paramsFn(params) : params,
-    type: ActionTypes.START,
-  });
+  const fetchStart = (params: any): IFetchStartResponse => {
+    const payload = paramsFn ? paramsFn(params) : params;
+    return {
+      name,
+      originalParams: payload,
+      payload,
+      transactionId: Date.now(),
+      type: ActionTypes.START,
+    };
+  };
 
   /**
    * Fetch end action
-   * @param {Object} response
+   * @param {Object} response The response from the backend
+   * @param {Object} originalParams The original parameters passed to the API function
    */
   const fetchEnd = (response: any, originalParams: any): IFetchEndResponse => ({
     originalParams,
@@ -87,7 +95,8 @@ export function generateActions(
 
   /**
    * Fetch error action
-   * @param {error} error
+   * @param {Object} error The error response from the backend
+   * @param {Object} originalParams The original parameters passed to the API function
    */
   const fetchFail = (error: any, originalParams: any): IFetchErrorResponse => ({
     originalParams,

@@ -1,18 +1,21 @@
 import { IActionTypes } from './actions';
 export interface IStartPayload {
     payload: any;
+    originalParams: any;
     isLoading: true;
     error: null;
     data: null;
     lastUpdated: number;
 }
 export interface IEndPayload {
+    originalParams: any;
     isLoading: false;
     error: null;
     data: any;
     lastUpdated: number;
 }
 export interface IFailPayload {
+    originalParams: any;
     isLoading: false;
     error: any;
     data: null;
@@ -30,6 +33,7 @@ export interface IActionsMap {
 }
 export interface IReduxFnMapArg2 {
     payload: any;
+    originalParams: any;
     type: string;
 }
 /**
@@ -42,15 +46,15 @@ export declare const reducers: ({ start, fail, end }: {
     fail?: (state: any, additionalState: IStartPayload | IEndPayload | IFailPayload, globalState: any) => any;
     end?: (state: any, additionalState: IStartPayload | IEndPayload | IFailPayload, globalState: any) => any;
 }) => {
-    start: (state: any, payload: any, globalState: any) => any;
-    fail: (state: any, { payload: { error } }: any, globalState: any) => any;
-    end: (state: any, { payload: { response } }: any, globalState: any) => any;
+    start: (state: any, { originalParams, payload }: any, globalState: any) => any;
+    fail: (state: any, { payload: { error }, originalParams }: any, globalState: any) => any;
+    end: (state: any, { payload: { response }, originalParams }: any, globalState: any) => any;
 };
 /**
  *
- * @param {*} actionsMap
+ * @param {IActionsMap} actionsMap
  */
-export declare const reduxFnMap: (actionsMap: IActionsMap, initialState?: any) => (state: any, { type, payload }: IReduxFnMapArg2, globalState: any) => any;
+export declare const reduxFnMap: (actionsMap: IActionsMap, initialState?: any) => (state: any, { type, payload, originalParams }: IReduxFnMapArg2, globalState: any) => any;
 /**
  * Will generate standard reducers to fetch data from api.
  * @param {ActionTypes: IActionTypes} ActionTypes Redux action types

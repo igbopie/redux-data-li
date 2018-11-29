@@ -2,6 +2,7 @@ import { IActionTypes } from './actions';
 
 export interface IStartPayload {
   payload: any;
+  originalParams: any;
   isLoading: true;
   error: null;
   data: null;
@@ -9,6 +10,7 @@ export interface IStartPayload {
 }
 
 export interface IEndPayload {
+  originalParams: any;
   isLoading: false;
   error: null;
   data: any;
@@ -16,6 +18,7 @@ export interface IEndPayload {
 }
 
 export interface IFailPayload {
+  originalParams: any;
   isLoading: false;
   error: any;
   data: null;
@@ -36,6 +39,7 @@ type reducerPayload = IStartPayload | IEndPayload | IFailPayload;
 
 export interface IReduxFnMapArg2 {
   payload: any;
+  originalParams: any;
   type: string;
 }
 
@@ -53,30 +57,49 @@ export const reducers = ({ start = merge, fail = merge, end = merge }) => ({
   /**
    * Will clear previous state and set loading flag
    */
-  start: (state: any, payload: any, globalState: any) =>
-        start(state, { payload, isLoading: true, error: null, data: null, lastUpdated: Date.now() }, globalState),
+  start: (state: any, { originalParams, payload }: any, globalState: any) =>
+        start(state, {
+          data: null,
+          error: null,
+          isLoading: true,
+          lastUpdated: Date.now(),
+          originalParams,
+          payload,
+        }, globalState),
 
   /**
    * Will append the error to the state
    */
-  fail: (state: any, { payload: { error } }: any, globalState: any) =>
-        fail(state, { isLoading: false, error, data: null, lastUpdated: Date.now() }, globalState),
+  fail: (state: any, { payload: { error }, originalParams }: any, globalState: any) =>
+        fail(state, {
+          data: null,
+          error,
+          isLoading: false,
+          lastUpdated: Date.now(),
+          originalParams,
+        }, globalState),
 
   /**
    * Will load data into state
    */
-  end: (state: any, { payload: { response } }: any, globalState: any) =>
-        end(state, { isLoading: false, error: null, lastUpdated: Date.now(), data: response }, globalState),
+  end: (state: any, { payload: { response }, originalParams }: any, globalState: any) =>
+        end(state, {
+          data: response,
+          error: null,
+          isLoading: false,
+          lastUpdated: Date.now(),
+          originalParams,
+        }, globalState),
 });
 
 /**
  *
- * @param {*} actionsMap
+ * @param {IActionsMap} actionsMap
  */
 export const reduxFnMap = (actionsMap: IActionsMap, initialState: any = {}) =>
-  (state: any = initialState, { type, payload }: IReduxFnMapArg2, globalState: any) => {
+  (state: any = initialState, { type, payload, originalParams }: IReduxFnMapArg2, globalState: any) => {
     if (actionsMap[type]) {
-      return actionsMap[type].call({}, state, { payload }, globalState);
+      return actionsMap[type].call({}, state, { payload, originalParams }, globalState);
     }
     return state;
   };
