@@ -30,7 +30,7 @@ const ongoingRequests: { [k: string]: number }  = {};
  * @param {IReduxAPIAction} reduxAPIAction An object that contains the definition of the action
  * @param {boolean} cancelRequest Cancel any previous requests that're in progress
  *
- * @returns {Promise<MerlinAction<R>>}
+ * @returns {Promise<any>}
  */
 const reduxApiActionInner = async (
     dispatch: any,
@@ -74,13 +74,11 @@ const reduxApiActionInner = async (
           if (response.status && response.status >= 400) {
             throw response;
           }
-          await dispatch(end(response, payload));
-          resolve(response);
+          resolve(await dispatch(end(response, payload)));
         }
       } catch (e) {
         delete ongoingRequests[name];
-        await dispatch(fail(e, payload));
-        reject(e);
+        reject(await dispatch(fail(e, payload)));
       }
     });
   }
